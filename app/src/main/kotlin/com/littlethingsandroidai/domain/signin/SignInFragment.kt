@@ -64,6 +64,7 @@ class SignInFragment : Fragment() {
     private val viewModel: SignInViewModel by viewModels {
         SignInViewModel.Factory(
             appDataService = AppGraph.current.appDataWithAuthorizationService,
+            sessionService = AppGraph.current.sessionService,
             onLoginSuccess = ::navigateToHome,
         )
     }
@@ -89,6 +90,10 @@ class SignInFragment : Fragment() {
                 val shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
                 binding.termsCheckBox.startAnimation(shake)
                 Toast.makeText(requireContext(), R.string.sign_in_terms_required, Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (SignInDevConfig.MOCK_GOOGLE_SIGN_IN) {
+                viewModel.signInWithMockGoogle()
                 return@setOnClickListener
             }
             signInLauncher.launch(googleSignInClient.signInIntent)

@@ -5,4 +5,9 @@
     <color name="lt_white">#FFFFFF</color>
     <color name="lt_grey_dark">#FF1D1D1D</color>
     <color name="lt_border">#1D1D1D</color>
+    <!-- Figma oat — Home background -->
+    <color name="lt_oat">#FFFDF8</color>
+    <color name="lt_tab_bar_icon_selected">#FFFFFFFF</color>
+    <color name="lt_tab_bar_icon_unselected">#80FFFFFF</color>
+    <color name="lt_tab_bar_background">#FF000000</color>
 </resources>

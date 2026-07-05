@@ -12,6 +12,7 @@ import com.littlethingsandroidai.service.AppDataWithoutAuthorizationService
 import com.littlethingsandroidai.service.auth.repository.AuthRepository
 import com.littlethingsandroidai.service.auth.repository.DefaultAuthRepository
 import com.littlethingsandroidai.service.auth.repository.SessionDataRepository
+import com.littlethingsandroidai.service.reflection.repository.DefaultReflectionRepository
 import com.littlethingsandroidai.service.interceptor.AuthInterceptor
 import com.littlethingsandroidai.service.interceptor.LogoutInterceptor
 import com.littlethingsandroidai.service.interceptor.RefreshTokenInterceptor
@@ -65,7 +66,12 @@ class AppGraph private constructor(
                     apiClient = authenticatedApiClient,
                     tokenProvider = sessionService,
                 )
-            val appDataWithAuthorizationService = AppDataWithAuthorizationService(authRepository = authRepository)
+            val reflectionRepository = DefaultReflectionRepository(apiClient = authenticatedApiClient)
+            val appDataWithAuthorizationService =
+                AppDataWithAuthorizationService(
+                    authRepository = authRepository,
+                    reflectionRepository = reflectionRepository,
+                )
 
             InjectionValues.register(
                 FeatureToggle::class.java,

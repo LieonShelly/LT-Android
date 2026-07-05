@@ -18,4 +18,11 @@ object AppColors {
     /** Mirrors [R.color.lt_border] — SignIn Google button stroke, iOS hex 0x1D1D1D. */
     @ColorInt
     const val border: Int = 0xFF1D1D1D.toInt()
+
+    /** Figma oat — Home page background. */
+    @ColorInt
+    const val oat: Int = 0xFFFFFDF8.toInt()
+
+    @ColorInt
+    const val tabBarBackground: Int = 0xFF000000.toInt()
 }

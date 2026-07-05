@@ -1,8 +1,13 @@
 # Little Things Android
 
-Android client for **Little Things** — a daily reflection and journaling app. This project mirrors the iOS `LittleThingsApp` architecture and delivers a v1 focused on the **Google Sign-In → token persistence → Home** auth flow. SignIn is fully implemented; Splash, Home tabs, and other screens are placeholders for future iterations.
+Android client for **Little Things** — a daily reflection and journaling app. This project mirrors the iOS `LittleThingsApp` architecture and delivers a v1 focused on the **Google Sign-In → token persistence → Home** auth flow. SignIn is fully implemented; **Home** has a Figma-aligned floating bottom tab bar with four placeholder tabs; Calendar / Thread / Insights / User business UI comes in later iterations.
+
+## Home Shell
+
+After sign-in, `HomeActivity` shows a floating black pill tab bar (`LtHomeTabBar` in `:core:uicomponent`) with four tabs (Calendar, Thread, Insights, User). Tab content is placeholder; icons use vector placeholders until Figma assets are added. See [Home shell spec](docs/superpowers/specs/2026-07-05-android-home-shell-design.md).
 
 **Design spec:** [docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md](docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md)  
+**Home shell spec:** [docs/superpowers/specs/2026-07-05-android-home-shell-design.md](docs/superpowers/specs/2026-07-05-android-home-shell-design.md)  
 **Startup flow:** [docs/app-startup-flow.md](docs/app-startup-flow.md)
 
 ---

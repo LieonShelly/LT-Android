@@ -3,6 +3,7 @@ package com.littlethingsandroidai.domain.signin
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.littlethingsandroidai.core.persistence.SessionService
 import com.littlethingsandroidai.service.AppDataWithAuthorizationService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val appDataService: AppDataWithAuthorizationService,
+    private val sessionService: SessionService,
     private val onLoginSuccess: () -> Unit,
 ) : ViewModel() {
 
@@ -42,12 +44,28 @@ class SignInViewModel(
         }
     }
 
+    fun signInWithMockGoogle() {
+        viewModelScope.launch {
+            _loading.value = true
+            _errorMessage.value = null
+
+            sessionService.updateTokens(
+                accessToken = SignInDevConfig.MOCK_ACCESS_TOKEN,
+                refreshToken = SignInDevConfig.MOCK_REFRESH_TOKEN,
+            )
+            onLoginSuccess()
+
+            _loading.value = false
+        }
+    }
+
     fun clearError() {
         _errorMessage.value = null
     }
 
     class Factory(
         private val appDataService: AppDataWithAuthorizationService,
+        private val sessionService: SessionService,
         private val onLoginSuccess: () -> Unit,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
@@ -57,6 +75,7 @@ class SignInViewModel(
             }
             return SignInViewModel(
                 appDataService = appDataService,
+                sessionService = sessionService,
                 onLoginSuccess = onLoginSuccess,
             ) as T
         }

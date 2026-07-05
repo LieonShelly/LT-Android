@@ -1,7 +1,7 @@
 # Little Things Android — 启动加载流程
 
 **日期：** 2026-07-05  
-**适用版本：** v1（Auth 最小链路 + Home 占位）  
+**适用版本：** v1（Auth 最小链路 + Home Shell；Calendar Tab Phase A 已落地）  
 **相关文档：** [架构设计](superpowers/specs/2026-07-05-littlethings-android-architecture-design.md)
 
 ---
@@ -15,7 +15,7 @@
 | 进程启动 | `LTApplication` | 构建全局依赖图 `AppGraph` |
 | 路由分发 | `SplashActivity` | 检查 Session，决定去向 |
 | 未登录 | `PreHomeActivity` | 登录前流程（目前仅 SignIn） |
-| 已登录 | `HomeActivity` | 主界面四 Tab（占位） |
+| 已登录 | `HomeActivity` | 主界面：底部胶囊 TabBar + Calendar（Phase A）+ 三 Tab 占位 |
 
 ```mermaid
 flowchart TD
@@ -30,7 +30,7 @@ flowchart TD
     I --> J[POST /api/auth/google]
     J --> K[保存 Token]
     K --> F
-    F --> L[4 Tab 占位页]
+    F --> L[Calendar + 3 Tab 占位]
 
     F --> M[observeSessionExpiration]
     G --> M
@@ -164,6 +164,8 @@ startDestination = signInFragment
 
 ### 5.1 Google 登录链路
 
+> **Dev Mock（临时）：** `SignInDevConfig.MOCK_GOOGLE_SIGN_IN = true` 时，勾选条款后点击 Google 登录会跳过 Google SDK 与后端 API，直接写入 mock token 并进入 Home。关闭 mock 见 `domain/signin/SignInDevConfig.kt`。
+
 ```
 用户点击 Google 登录
   → 校验 Terms Checkbox
@@ -198,11 +200,15 @@ override suspend fun googleLogin(idToken: String) {
 
 有 refresh token 时直接进入 `HomeActivity`：
 
+- 背景色 `lt_oat`（`#FFFDF8`）
+- `ViewPager2` 承载四 Tab Fragment（禁用手势滑动）
+- 底部浮动 `LtHomeTabBar`（黑色胶囊，系统 icon 占位）切换 Tab
+- 默认 Tab：Calendar
+
 ```kotlin
-binding.homeViewPager.adapter = HomeTabAdapter(this, tabs)
-TabLayoutMediator(binding.homeTabLayout, binding.homeViewPager) { ... }.attach()
-coordinator = HomeCoordinator(binding.homeViewPager, tabs)
-userHomeCoordinator = UserHomeCoordinator()
+coordinator = HomeCoordinator(binding.homeViewPager, binding.homeTabBar, tabs)
+coordinator.bind()
+coordinator.push(HomeRoute.CALENDAR)
 observeSessionExpiration()
 ```
 
@@ -210,12 +216,52 @@ observeSessionExpiration()
 
 | Tab | Route | v1 状态 |
 |-----|-------|---------|
-| Calendar | `HomeRoute.CALENDAR` | 占位 |
+| Calendar | `HomeRoute.CALENDAR` | **Phase A 已实现**（`CalendarFragment`） |
 | Thread | `HomeRoute.THREAD` | 占位 |
 | Insights | `HomeRoute.INSIGHTS` | 占位 |
 | User | `HomeRoute.USER` | 占位 |
 
-各 Tab 由 `PlaceholderTabFragment` 渲染简单占位 UI。
+Tab 0 由 `CalendarFragment` 承载完整月历 UI；其余 Tab 仍由 `PlaceholderTabFragment` 渲染简单占位 UI。
+
+### 6.1 Calendar Tab — Phase A
+
+`HomeTabAdapter` index 0 已替换为 `CalendarFragment`（不再使用占位页）。登录后默认进入 Calendar Tab，展示可横向切月的月历视图。
+
+**UI 结构：**
+
+| 区域 | 组件 | 说明 |
+|------|------|------|
+| Header | `view_calendar_header` | 当前月/年标题；Today 角标点击回到当前月 |
+| Weekday | `view_calendar_weekday_row` | 7 列星期标题行 |
+| 月历主体 | 横向 `ViewPager2` + `CalendarMonthPagerAdapter` | 每月一页，左右滑动切月 |
+| 日格 Grid | `RecyclerView` + `GridLayoutManager(7)` | `CalendarDayGridAdapter` 渲染 7 列日期格 |
+| Footer | `monthFooter` | 当月反思数量文案（strings 模板） |
+
+**数据链路：**
+
+```
+CalendarFragment.onViewCreated
+  → CalendarViewModel.generateMonths()      # 生成可滑动月份列表
+  → CalendarViewModel.scrollToCurrentMonth() # 定位到当前月
+  → CalendarViewModel.fetchData()
+  → CalendarReflectionsUseCase.execute()
+  → ReflectionRepository.fetchCalendarView()
+  → GET /api/calendar-view
+  → 合并 reflections 到 CalendarDay（stamp 暂用 ic_calendar_stamp_placeholder）
+```
+
+ViewModel 通过 `CalendarViewModelFactory(AppGraph.current.appDataWithAuthorizationService)` 注入，与 SignIn 模式一致。
+
+**Dev Mock 登录：** `SignInDevConfig.MOCK_GOOGLE_SIGN_IN = true` 时仍可跳过 Google SDK 与后端，直接写入 mock token 进入 Home 并加载 Calendar（Mock 模式下 API 是否可达取决于环境配置）。
+
+**Phase A 边界 / 待后续 Phase：**
+
+| 已实现（Phase A） | 未实现（Phase B–D） |
+|-------------------|---------------------|
+| Header + Weekday + 横向切月 + 7 列 Grid + Footer | MonthPicker 弹窗 |
+| `generateMonths` / `fetchData` / `scrollToCurrentMonth` | SwipeRefresh + monthLock |
+| Reflection API 对接 + stamp 占位 icon | Coil 真实 stamp 图 + 详情页 + markRead |
+| ViewModel / UseCase 单元测试 | TodayQuestion + Add stub |
 
 ---
 
@@ -270,9 +316,10 @@ Refresh 使用 **bareApiClient**，避免拦截器循环依赖。
 | 已实现 | 占位 / 未实现 |
 |--------|---------------|
 | App 启动 + `AppGraph` DI | Onboarding / Welcome / FirstQuestion |
-| Splash 路由分发 | Home 四 Tab 业务内容 |
-| Google Sign-In 完整 UI | 除 Auth 外的 UseCase |
+| Splash 路由分发 | Thread / Insights / User Tab 业务内容 |
+| Google Sign-In 完整 UI + Dev Mock | Calendar Phase B–D（MonthPicker、Coil、详情等） |
 | Token 持久化 + 刷新 + 过期踢出 | Compose Insights 等 |
+| Home Calendar Tab Phase A | |
 
 ---
 
@@ -294,9 +341,11 @@ app/src/main/kotlin/com/littlethingsandroidai/
 │       └── UserHomeCoordinator.kt
 ├── domain/
 │   ├── signin/                      # SignInFragment + SignInViewModel
+│   ├── calendar/                    # CalendarFragment + ViewModel + Adapters
 │   └── home/                        # HomeTabAdapter + PlaceholderTabFragment
 └── service/
     ├── auth/                        # AuthRepository, AuthUseCase, AuthRequest
+    ├── reflection/                  # ReflectionRepository, CalendarReflectionsUseCase
     └── interceptor/                 # Auth / RefreshToken / Logout
 
 core/persistence/.../SessionService.kt   # Token 读写与 hasValidToken()

@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UniversalResponse<T>(
-    val code: Int,
+    val success: Boolean = true,
+    val code: Int = 0,
     val data: T,
     val message: String? = null,
 )
