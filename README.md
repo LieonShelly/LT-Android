@@ -2,7 +2,8 @@
 
 Android client for **Little Things** — a daily reflection and journaling app. This project mirrors the iOS `LittleThingsApp` architecture and delivers a v1 focused on the **Google Sign-In → token persistence → Home** auth flow. SignIn is fully implemented; Splash, Home tabs, and other screens are placeholders for future iterations.
 
-**Design spec:** [docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md](docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md)
+**Design spec:** [docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md](docs/superpowers/specs/2026-07-05-littlethings-android-architecture-design.md)  
+**Startup flow:** [docs/app-startup-flow.md](docs/app-startup-flow.md)
 
 ---
 

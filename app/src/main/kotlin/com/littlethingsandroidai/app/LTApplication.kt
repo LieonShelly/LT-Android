@@ -6,6 +6,6 @@ import com.littlethingsandroidai.core.common.AppEnvironment
 class LTApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        AppGraph.build(applicationContext, AppEnvironment.DEV)
+        AppGraph.build(applicationContext, AppEnvironment.RELEASE)
     }
 }

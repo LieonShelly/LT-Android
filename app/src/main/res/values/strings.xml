@@ -9,5 +9,5 @@
     <string name="sign_in_google_token_empty">Google token is missing.</string>
     <string name="sign_in_google_failed_code">Google sign-in failed (%1$d)</string>
     <!-- TODO: Replace with your real web client id from Firebase/Google Cloud Console. -->
-    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>
+    <string name="default_web_client_id">92621954916-ujfsjlbj9ubbs26ifcv0dq0af8jltck4.apps.googleusercontent.com</string>
 </resources>
