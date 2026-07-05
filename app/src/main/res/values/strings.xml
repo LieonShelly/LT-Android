@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">LittleThingsAndroidAI</string>
+    <string name="sign_in_app_title">the little things</string>
+    <string name="sign_in_app_icon_desc">Little Things app icon</string>
+    <string name="sign_in_terms_text">I agree to the Terms of Service and Privacy Policy.</string>
+    <string name="sign_in_google_button">Continue with Google</string>
+    <string name="sign_in_google_icon_desc">Google icon</string>
+    <string name="sign_in_terms_required">Please accept terms first.</string>
+    <string name="sign_in_google_token_empty">Google token is missing.</string>
+    <string name="sign_in_google_failed_code">Google sign-in failed (%1$d)</string>
+    <!-- TODO: Replace with your real web client id from Firebase/Google Cloud Console. -->
+    <string name="default_web_client_id">YOUR_WEB_CLIENT_ID</string>
+</resources>

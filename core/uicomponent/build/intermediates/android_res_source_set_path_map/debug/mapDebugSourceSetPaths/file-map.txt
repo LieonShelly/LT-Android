@@ -1,0 +1,8 @@
+com.littlethingsandroidai.core.uicomponent-pngs-0 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/generated/res/pngs/debug
+com.littlethingsandroidai.core.uicomponent-updated_navigation_xml-1 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/generated/updated_navigation_xml/debug
+com.littlethingsandroidai.core.uicomponent-mergeDebugResources-2 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.littlethingsandroidai.core.uicomponent-mergeDebugResources-3 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.littlethingsandroidai.core.uicomponent-debug-4 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/intermediates/merged_res/debug/mergeDebugResources
+com.littlethingsandroidai.core.uicomponent-debug-5 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/build/intermediates/packaged_res/debug/packageDebugResources
+com.littlethingsandroidai.core.uicomponent-debug-6 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/src/debug/res
+com.littlethingsandroidai.core.uicomponent-main-7 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/uicomponent/src/main/res

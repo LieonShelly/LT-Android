@@ -1,0 +1,6 @@
+com.littlethingsandroidai.core.uicomponent
+color lt_background
+color lt_border
+color lt_grey_dark
+color lt_white
+style LtTheme

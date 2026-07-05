@@ -1,0 +1,8 @@
+com.littlethingsandroidai.core.persistence-pngs-0 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/generated/res/pngs/debug
+com.littlethingsandroidai.core.persistence-updated_navigation_xml-1 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/generated/updated_navigation_xml/debug
+com.littlethingsandroidai.core.persistence-mergeDebugResources-2 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+com.littlethingsandroidai.core.persistence-mergeDebugResources-3 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+com.littlethingsandroidai.core.persistence-debug-4 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/intermediates/merged_res/debug/mergeDebugResources
+com.littlethingsandroidai.core.persistence-debug-5 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/build/intermediates/packaged_res/debug/packageDebugResources
+com.littlethingsandroidai.core.persistence-debug-6 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/src/debug/res
+com.littlethingsandroidai.core.persistence-main-7 /Users/renjun.li/Desktop/LittleThings/LittleThingsAndroidAI/core/persistence/src/main/res
