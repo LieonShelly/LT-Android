@@ -1,0 +1,8 @@
+{
+  "success": true,
+  "data": [
+    { "id": "qod_1", "title": "What warmed you today?", "category": { "name": "Life" } },
+    { "id": "qod_2", "title": "What are you grateful for?", "category": { "name": "Gratitude" } },
+    { "id": "qod_3", "title": "Which moment made you pause?", "category": { "name": "Present" } }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "data": [
+    {
+      "date": "2026-07-01",
+      "reflections": [
+        {
+          "id": "ans_demo_1",
+          "content": "A quiet morning coffee.",
+          "question": {
+            "id": "q1",
+            "title": "What warmed you today?",
+            "category": { "name": "Life" }
+          },
+          "icon": {
+            "id": "icon_demo_1",
+            "url": "file:///android_asset/mock/images/stamp_01.png",
+            "status": "GENERATED",
+            "read_at": null
+          }
+        }
+      ]
+    },
+    {
+      "date": "2026-07-05",
+      "reflections": [
+        {
+          "id": "ans_demo_2a",
+          "content": "First stamp.",
+          "question": { "id": "q2", "title": "Small win?", "category": { "name": "Wins" } },
+          "icon": { "id": "icon_demo_2a", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null }
+        },
+        {
+          "id": "ans_demo_2b",
+          "content": "Second stamp.",
+          "question": { "id": "q3", "title": "Another moment?", "category": { "name": "Wins" } },
+          "icon": { "id": "icon_demo_2b", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null }
+        }
+      ]
+    },
+    {
+      "date": "2026-07-10",
+      "reflections": [
+        { "id": "ans_demo_3a", "content": "One.", "question": { "id": "q4", "title": "Q4", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_3a", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } },
+        { "id": "ans_demo_3b", "content": "Two.", "question": { "id": "q5", "title": "Q5", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_3b", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } },
+        { "id": "ans_demo_3c", "content": "Three.", "question": { "id": "q6", "title": "Q6", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_3c", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } }
+      ]
+    },
+    {
+      "date": "2026-07-12",
+      "reflections": [
+        { "id": "ans_demo_4a", "content": "A", "question": { "id": "q7", "title": "Q7", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_4a", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } },
+        { "id": "ans_demo_4b", "content": "B", "question": { "id": "q8", "title": "Q8", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_4b", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } },
+        { "id": "ans_demo_4c", "content": "C", "question": { "id": "q9", "title": "Q9", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_4c", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } },
+        { "id": "ans_demo_4d", "content": "D", "question": { "id": "q10", "title": "Q10", "category": { "name": "Life" } }, "icon": { "id": "icon_demo_4d", "url": "file:///android_asset/mock/images/stamp_01.png", "status": "GENERATED", "read_at": null } }
+      ]
+    }
+  ]
+}

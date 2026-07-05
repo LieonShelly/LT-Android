@@ -1,6 +1,7 @@
 package com.littlethingsandroidai.app
 
 import android.content.Context
+import com.littlethingsandroidai.BuildConfig
 import com.littlethingsandroidai.core.common.AppEnvironment
 import com.littlethingsandroidai.core.common.feature.FeatureRolloutStage
 import com.littlethingsandroidai.core.common.feature.FeatureToggle
@@ -17,6 +18,8 @@ import com.littlethingsandroidai.service.reflection.repository.DefaultReflection
 import com.littlethingsandroidai.service.interceptor.AuthInterceptor
 import com.littlethingsandroidai.service.interceptor.LogoutInterceptor
 import com.littlethingsandroidai.service.interceptor.RefreshTokenInterceptor
+import com.littlethingsandroidai.service.mock.AndroidMockAssetLoader
+import com.littlethingsandroidai.service.mock.MockResponseInterceptor
 import com.littlethingsandroidai.service.network.SSLPinningValidator
 
 class AppGraph private constructor(
@@ -40,33 +43,59 @@ class AppGraph private constructor(
             // Placeholder hook for future SSL pinning setup.
             SSLPinningValidator.createBuilder(environment)
 
-            val bareApiClient = ApiClient(environment = environment)
-            val sessionDataRepository =
-                SessionDataRepository(
-                    apiClient = bareApiClient,
-                    tokenProvider = sessionService,
-                )
-            val appDataWithoutAuthorizationService =
-                AppDataWithoutAuthorizationService(sessionDataRepository)
+            val mockInterceptor =
+                MockResponseInterceptor(AndroidMockAssetLoader(appContext))
 
-            val authInterceptor = AuthInterceptor(tokenProvider = sessionService)
-            val refreshTokenInterceptor =
-                RefreshTokenInterceptor(
-                    tokenProvider = sessionService,
-                    appDataWithoutAuthorizationService = appDataWithoutAuthorizationService,
-                )
-            val logoutInterceptor = LogoutInterceptor(tokenProvider = sessionService)
+            val bareApiClient: ApiClient
+            val authenticatedApiClient: ApiClient
+            val authRepository: AuthRepository
+            val appDataWithoutAuthorizationService: AppDataWithoutAuthorizationService
 
-            val authenticatedApiClient =
-                ApiClient(
-                    environment = environment,
-                    interceptors = listOf(authInterceptor, logoutInterceptor, refreshTokenInterceptor),
-                )
-            val authRepository =
-                DefaultAuthRepository(
-                    apiClient = authenticatedApiClient,
-                    tokenProvider = sessionService,
-                )
+            if (BuildConfig.USE_OFFLINE_MOCK) {
+                bareApiClient = ApiClient(environment = environment, interceptors = listOf(mockInterceptor))
+                authenticatedApiClient =
+                    ApiClient(environment = environment, interceptors = listOf(mockInterceptor))
+                authRepository =
+                    DefaultAuthRepository(
+                        apiClient = authenticatedApiClient,
+                        tokenProvider = sessionService,
+                    )
+                appDataWithoutAuthorizationService =
+                    AppDataWithoutAuthorizationService(
+                        SessionDataRepository(
+                            apiClient = bareApiClient,
+                            tokenProvider = sessionService,
+                        ),
+                    )
+            } else {
+                bareApiClient = ApiClient(environment = environment)
+                val sessionDataRepository =
+                    SessionDataRepository(
+                        apiClient = bareApiClient,
+                        tokenProvider = sessionService,
+                    )
+                appDataWithoutAuthorizationService =
+                    AppDataWithoutAuthorizationService(sessionDataRepository)
+
+                val authInterceptor = AuthInterceptor(tokenProvider = sessionService)
+                val refreshTokenInterceptor =
+                    RefreshTokenInterceptor(
+                        tokenProvider = sessionService,
+                        appDataWithoutAuthorizationService = appDataWithoutAuthorizationService,
+                    )
+                val logoutInterceptor = LogoutInterceptor(tokenProvider = sessionService)
+
+                authenticatedApiClient =
+                    ApiClient(
+                        environment = environment,
+                        interceptors = listOf(authInterceptor, logoutInterceptor, refreshTokenInterceptor),
+                    )
+                authRepository =
+                    DefaultAuthRepository(
+                        apiClient = authenticatedApiClient,
+                        tokenProvider = sessionService,
+                    )
+            }
             val reflectionRepository = DefaultReflectionRepository(apiClient = authenticatedApiClient)
             val iconRepository = DefaultIconRepository(apiClient = authenticatedApiClient)
             val appDataWithAuthorizationService =

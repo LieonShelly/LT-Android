@@ -165,6 +165,8 @@ startDestination = signInFragment
 ### 5.1 Google 登录链路
 
 > **Dev Mock（临时）：** `SignInDevConfig.MOCK_GOOGLE_SIGN_IN = true` 时，勾选条款后点击 Google 登录会跳过 Google SDK 与后端 API，直接写入 mock token 并进入 Home。关闭 mock 见 `domain/signin/SignInDevConfig.kt`。
+>
+> **Demo 离线包（demoDebug）：** `BuildConfig.USE_OFFLINE_MOCK = true` 时，勾选条款后点击 Google 登录会写入 `DemoFlavorConfig` token 并进入 Home；所有 Calendar 相关 API 由 `MockResponseInterceptor` 从本地 assets 返回，零 HTTP。安装包 ID：`com.littlethingsandroidai.demo`。构建命令：`./gradlew :app:installDemoDebug`。
 
 ```
 用户点击 Google 登录
@@ -254,6 +256,14 @@ CalendarFragment.onViewCreated
 ViewModel 通过 `CalendarViewModelFactory(AppGraph.current.appDataWithAuthorizationService)` 注入，与 SignIn 模式一致。
 
 **Dev Mock 登录：** `SignInDevConfig.MOCK_GOOGLE_SIGN_IN = true` 时仍可跳过 Google SDK 与后端，直接写入 mock token 进入 Home 并加载 Calendar（Mock 模式下 API 是否可达取决于环境配置）。
+
+### Demo 离线包（demoDebug）
+
+- Build Variant: `demoDebug`
+- `BuildConfig.USE_OFFLINE_MOCK = true`
+- 安装包 ID: `com.littlethingsandroidai.demo`
+- 数据来自 `app/src/demo/assets/mock/`，OkHttp `MockResponseInterceptor` 拦截，零 HTTP
+- 命令: `./gradlew :app:installDemoDebug`
 
 **Phase A/B 边界 / 待后续 Phase：**
 

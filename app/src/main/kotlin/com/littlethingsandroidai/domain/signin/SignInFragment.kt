@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.littlethingsandroidai.BuildConfig
 import com.littlethingsandroidai.R
 import com.littlethingsandroidai.app.AppGraph
 import com.littlethingsandroidai.app.home.HomeActivity
@@ -92,11 +93,11 @@ class SignInFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.sign_in_terms_required, Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (SignInDevConfig.MOCK_GOOGLE_SIGN_IN) {
-                viewModel.signInWithMockGoogle()
-                return@setOnClickListener
+            when {
+                BuildConfig.USE_OFFLINE_MOCK -> viewModel.signInWithMockGoogle()
+                SignInDevConfig.MOCK_GOOGLE_SIGN_IN -> viewModel.signInWithMockGoogle()
+                else -> signInLauncher.launch(googleSignInClient.signInIntent)
             }
-            signInLauncher.launch(googleSignInClient.signInIntent)
         }
     }
 
