@@ -15,7 +15,7 @@ data class CalendarMonth(
     val itemType: MonthItemType = MonthItemType.NORMAL,
 ) {
     val isFuture: Boolean
-        get() = date.atDay(1).isAfter(LocalDate.now())
+        get() = date.isAfter(YearMonth.from(LocalDate.now()))
 
     val isValidMonth: Boolean
         get() = itemType == MonthItemType.NORMAL

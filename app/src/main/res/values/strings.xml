@@ -21,4 +21,7 @@
     <string name="calendar_footer_current">%1$d stamps collected so far\n take your time with the %2$d days ahead</string>
     <string name="calendar_footer_current_last_day">%1$d stamps collected so far\n take your time today</string>
     <string name="calendar_footer_other">%1$d stamps collected this month</string>
+    <string name="calendar_month_lock">The best is yet to come</string>
+    <string name="calendar_stamp_more_badge">%1$d+</string>
+    <string name="reflection_detail_back_desc">Back</string>
 </resources>

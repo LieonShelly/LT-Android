@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="48dp">
+    android:minHeight="56dp">
 
     <TextView
         android:id="@+id/dayNumber"
@@ -16,14 +16,10 @@
         android:textSize="14sp"
         tools:text="5" />
 
-    <ImageView
-        android:id="@+id/stampPlaceholder"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="4dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_calendar_stamp_placeholder"
+    <FrameLayout
+        android:id="@+id/stampContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
         tools:visibility="visible" />
 

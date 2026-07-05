@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.littlethingsandroidai.databinding.ItemCalendarDayCellBinding
+import com.littlethingsandroidai.domain.calendar.model.Answer
 import com.littlethingsandroidai.domain.calendar.model.CalendarDay
 
-class CalendarDayGridAdapter : RecyclerView.Adapter<CalendarDayGridAdapter.DayViewHolder>() {
+class CalendarDayGridAdapter(
+    private val onStampClick: (Answer) -> Unit,
+) : RecyclerView.Adapter<CalendarDayGridAdapter.DayViewHolder>() {
 
     private var days: List<CalendarDay> = emptyList()
 
@@ -33,7 +36,7 @@ class CalendarDayGridAdapter : RecyclerView.Adapter<CalendarDayGridAdapter.DayVi
                 parent,
                 false,
             )
-        return DayViewHolder(binding)
+        return DayViewHolder(binding, onStampClick)
     }
 
     override fun onBindViewHolder(
@@ -45,6 +48,7 @@ class CalendarDayGridAdapter : RecyclerView.Adapter<CalendarDayGridAdapter.DayVi
 
     class DayViewHolder(
         private val binding: ItemCalendarDayCellBinding,
+        private val onStampClick: (Answer) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(day: CalendarDay) {
@@ -57,18 +61,26 @@ class CalendarDayGridAdapter : RecyclerView.Adapter<CalendarDayGridAdapter.DayVi
                 },
             )
 
-            val hasReflections = day.reflections?.reflections?.isNotEmpty() == true
+            val answers = day.reflections?.reflections.orEmpty()
             when {
-                hasReflections -> {
-                    binding.stampPlaceholder.visibility = View.VISIBLE
+                day.isCurrentMonth && answers.isNotEmpty() -> {
+                    binding.stampContainer.visibility = View.VISIBLE
                     binding.absentDash.visibility = View.GONE
+                    CalendarStampBinder.bind(
+                        container = binding.stampContainer,
+                        answers = answers,
+                        isCurrentMonth = day.isCurrentMonth,
+                        onAnswerClick = onStampClick,
+                    )
                 }
                 day.isAbsent && day.isCurrentMonth -> {
-                    binding.stampPlaceholder.visibility = View.GONE
+                    binding.stampContainer.visibility = View.GONE
+                    binding.stampContainer.removeAllViews()
                     binding.absentDash.visibility = View.VISIBLE
                 }
                 else -> {
-                    binding.stampPlaceholder.visibility = View.GONE
+                    binding.stampContainer.visibility = View.GONE
+                    binding.stampContainer.removeAllViews()
                     binding.absentDash.visibility = View.GONE
                 }
             }

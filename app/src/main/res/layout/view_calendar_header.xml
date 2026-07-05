@@ -8,27 +8,39 @@
     android:paddingTop="24dp"
     android:paddingEnd="24dp">
 
-    <TextView
-        android:id="@+id/monthTitle"
+    <LinearLayout
+        android:id="@+id/monthHeaderToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:minHeight="48dp"
+        android:orientation="horizontal"
+        android:paddingEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="July" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/monthChevron"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="4dp"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_calendar_month_chevron"
-        app:layout_constraintBottom_toBottomOf="@id/monthTitle"
-        app:layout_constraintStart_toEndOf="@id/monthTitle"
-        app:layout_constraintTop_toTopOf="@id/monthTitle" />
+        <TextView
+            android:id="@+id/monthTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="July" />
+
+        <ImageView
+            android:id="@+id/monthChevron"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_calendar_month_chevron" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/yearTitle"
@@ -38,7 +50,7 @@
         android:textColor="@android:color/black"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monthTitle"
+        app:layout_constraintTop_toBottomOf="@id/monthHeaderToggle"
         tools:text="2026" />
 
     <TextView
@@ -54,7 +66,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/yearTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/monthTitle"
+        app:layout_constraintTop_toTopOf="@id/monthHeaderToggle"
         tools:text="5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

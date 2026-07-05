@@ -231,9 +231,10 @@ Tab 0 由 `CalendarFragment` 承载完整月历 UI；其余 Tab 仍由 `Placehol
 
 | 区域 | 组件 | 说明 |
 |------|------|------|
-| Header | `view_calendar_header` | 当前月/年标题；Today 角标点击回到当前月 |
-| Weekday | `view_calendar_weekday_row` | 7 列星期标题行 |
-| 月历主体 | 横向 `ViewPager2` + `CalendarMonthPagerAdapter` | 每月一页，左右滑动切月 |
+| Header | `view_calendar_header` | 当前月/年标题；点击月份/Chevron 展开 MonthPicker；Today 角标回到当前月 |
+| MonthPicker | `view_calendar_month_picker` | 年份分隔 + 月份列表；选中后切 ViewPager |
+| Weekday | `view_calendar_weekday_row` | 7 列星期标题；未来月整行置灰 |
+| 月历主体 | `SwipeRefreshLayout` + 横向 `ViewPager2` | 下拉刷新当前月；左右滑动切月 |
 | 日格 Grid | `RecyclerView` + `GridLayoutManager(7)` | `CalendarDayGridAdapter` 渲染 7 列日期格 |
 | Footer | `monthFooter` | 当月反思数量文案（strings 模板） |
 
@@ -254,14 +255,15 @@ ViewModel 通过 `CalendarViewModelFactory(AppGraph.current.appDataWithAuthoriza
 
 **Dev Mock 登录：** `SignInDevConfig.MOCK_GOOGLE_SIGN_IN = true` 时仍可跳过 Google SDK 与后端，直接写入 mock token 进入 Home 并加载 Calendar（Mock 模式下 API 是否可达取决于环境配置）。
 
-**Phase A 边界 / 待后续 Phase：**
+**Phase A/B 边界 / 待后续 Phase：**
 
-| 已实现（Phase A） | 未实现（Phase B–D） |
-|-------------------|---------------------|
-| Header + Weekday + 横向切月 + 7 列 Grid + Footer | MonthPicker 弹窗 |
-| `generateMonths` / `fetchData` / `scrollToCurrentMonth` | SwipeRefresh + monthLock |
-| Reflection API 对接 + stamp 占位 icon | Coil 真实 stamp 图 + 详情页 + markRead |
-| ViewModel / UseCase 单元测试 | TodayQuestion + Add stub |
+| 已实现（Phase A–B） | 未实现（Phase C–D） |
+|---------------------|---------------------|
+| Header + Weekday + 横向切月 + 7 列 Grid + Footer | Coil 真实 stamp 图 + 详情页 + markRead |
+| MonthPicker + SwipeRefresh + 未来月 monthLock | TodayQuestion + Add stub |
+| `generateMonths` / `fetchData` / `scrollToCurrentMonth` | |
+| Reflection API 对接 + stamp 占位 icon | |
+| ViewModel / UseCase 单元测试 | |
 
 ---
 

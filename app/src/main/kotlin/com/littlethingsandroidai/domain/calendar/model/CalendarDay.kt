@@ -56,3 +56,8 @@ data class Category(
     val id: String,
     val name: String,
 )
+
+data class IconReadResult(
+    val id: String,
+    val readAt: String,
+)

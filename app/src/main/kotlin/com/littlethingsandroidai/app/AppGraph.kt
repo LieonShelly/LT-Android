@@ -12,6 +12,7 @@ import com.littlethingsandroidai.service.AppDataWithoutAuthorizationService
 import com.littlethingsandroidai.service.auth.repository.AuthRepository
 import com.littlethingsandroidai.service.auth.repository.DefaultAuthRepository
 import com.littlethingsandroidai.service.auth.repository.SessionDataRepository
+import com.littlethingsandroidai.service.icon.repository.DefaultIconRepository
 import com.littlethingsandroidai.service.reflection.repository.DefaultReflectionRepository
 import com.littlethingsandroidai.service.interceptor.AuthInterceptor
 import com.littlethingsandroidai.service.interceptor.LogoutInterceptor
@@ -67,10 +68,12 @@ class AppGraph private constructor(
                     tokenProvider = sessionService,
                 )
             val reflectionRepository = DefaultReflectionRepository(apiClient = authenticatedApiClient)
+            val iconRepository = DefaultIconRepository(apiClient = authenticatedApiClient)
             val appDataWithAuthorizationService =
                 AppDataWithAuthorizationService(
                     authRepository = authRepository,
                     reflectionRepository = reflectionRepository,
+                    iconRepository = iconRepository,
                 )
 
             InjectionValues.register(

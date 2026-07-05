@@ -3,6 +3,7 @@ package com.littlethingsandroidai.domain.calendar
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.littlethingsandroidai.domain.calendar.model.Answer
 import com.littlethingsandroidai.domain.calendar.model.CalendarDay
 import com.littlethingsandroidai.domain.calendar.model.CalendarMonth
 import com.littlethingsandroidai.domain.calendar.model.MonthItemType
@@ -14,6 +15,7 @@ import java.time.YearMonth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class CalendarViewModel(
@@ -43,6 +45,43 @@ class CalendarViewModel(
 
     private val _currentMonthIndex = MutableStateFlow(0)
     val currentMonthIndex: StateFlow<Int> = _currentMonthIndex.asStateFlow()
+
+    private val _isMonthPickerVisible = MutableStateFlow(false)
+    val isMonthPickerVisible: StateFlow<Boolean> = _isMonthPickerVisible.asStateFlow()
+
+    fun monthPickerItems(): List<MonthPickerItem> = MonthPickerItemsBuilder.from(_months.value)
+
+    fun toggleMonthPicker() {
+        _isMonthPickerVisible.value = !_isMonthPickerVisible.value
+    }
+
+    fun setMonthPickerVisible(visible: Boolean) {
+        _isMonthPickerVisible.value = visible
+    }
+
+    fun dismissMonthPicker() {
+        _isMonthPickerVisible.value = false
+    }
+
+    fun selectMonth(month: CalendarMonth) {
+        val valid = validMonths()
+        val index = valid.indexOfFirst { it.id == month.id }
+        if (index < 0) return
+        val selected = valid[index]
+        _currentMonth.value = selected
+        _currentMonthIndex.value = index
+        _isMonthPickerVisible.value = false
+        if (!selected.isFuture) {
+            viewModelScope.launch { fetchData() }
+        }
+    }
+
+    suspend fun refreshCurrentMonth() {
+        val current = _currentMonth.value ?: return
+        if (!current.isFuture) {
+            fetchData()
+        }
+    }
 
     suspend fun generateMonths() {
         val startYearMonth = YearMonth.of(2025, 1)
@@ -122,8 +161,10 @@ class CalendarViewModel(
         val month = valid[index]
         _currentMonth.value = month
         _currentMonthIndex.value = index
-        viewModelScope.launch {
-            fetchData()
+        if (!month.isFuture) {
+            viewModelScope.launch {
+                fetchData()
+            }
         }
     }
 
@@ -199,6 +240,20 @@ class CalendarViewModel(
         _currentMonth.value?.let { currentMonth ->
             updatedMonths.find { it.id == currentMonth.id }?.let { refreshed ->
                 _currentMonth.value = refreshed
+            }
+        }
+    }
+
+    fun markIconAsRead(answer: Answer) {
+        if (answer.icon?.readAt != null) return
+        val iconId = answer.icon?.id ?: return
+        viewModelScope.launch {
+            delay(500)
+            try {
+                service.markIconReadUseCase.execute(iconId)
+                fetchData()
+            } catch (error: Exception) {
+                LTLog.e(TAG, "markIconAsRead failed for $iconId", error)
             }
         }
     }

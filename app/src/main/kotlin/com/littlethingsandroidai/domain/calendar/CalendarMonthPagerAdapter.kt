@@ -2,17 +2,20 @@ package com.littlethingsandroidai.domain.calendar
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.littlethingsandroidai.R
 import com.littlethingsandroidai.databinding.ItemCalendarMonthPageBinding
+import com.littlethingsandroidai.domain.calendar.model.Answer
 import com.littlethingsandroidai.domain.calendar.model.CalendarMonth
 import java.time.LocalDate
 import java.time.YearMonth
 
 class CalendarMonthPagerAdapter(
     private val context: Context,
+    private val onStampClick: (Answer) -> Unit,
 ) : RecyclerView.Adapter<CalendarMonthPagerAdapter.MonthViewHolder>() {
 
     private var months: List<CalendarMonth> = emptyList()
@@ -48,7 +51,7 @@ class CalendarMonthPagerAdapter(
         private val binding: ItemCalendarMonthPageBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private val dayGridAdapter = CalendarDayGridAdapter()
+        private val dayGridAdapter = CalendarDayGridAdapter(onStampClick)
 
         init {
             binding.dayGrid.apply {
@@ -59,6 +62,14 @@ class CalendarMonthPagerAdapter(
         }
 
         fun bind(month: CalendarMonth) {
+            if (month.isFuture) {
+                binding.monthContentScroll.visibility = View.GONE
+                binding.monthLockMessage.visibility = View.VISIBLE
+                return
+            }
+
+            binding.monthContentScroll.visibility = View.VISIBLE
+            binding.monthLockMessage.visibility = View.GONE
             dayGridAdapter.submitList(month.days)
             bindFooter(month)
         }
