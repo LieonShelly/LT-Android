@@ -1,5 +1,0 @@
-int color lt_background 0x0
-int color lt_border 0x0
-int color lt_grey_dark 0x0
-int color lt_white 0x0
-int style LtTheme 0x0

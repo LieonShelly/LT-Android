@@ -1,1 +1,0 @@
-com.littlethingsandroidai.core.common
