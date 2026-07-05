@@ -3,6 +3,8 @@ package com.littlethingsandroidai.domain.calendar
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -13,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.littlethingsandroidai.R
 import com.littlethingsandroidai.domain.calendar.detail.ReflectionDetailFragment
 import com.littlethingsandroidai.domain.calendar.model.Answer
+import com.littlethingsandroidai.domain.calendar.model.Question
 import com.littlethingsandroidai.app.AppGraph
 import com.littlethingsandroidai.databinding.FragmentCalendarBinding
 import java.time.LocalDate
@@ -75,6 +78,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         setupHeader()
         setupSwipeRefresh()
         setupDetailContainer()
+        setupTodayQuestion()
         observeViewModel()
         loadCalendarData()
     }
@@ -117,6 +121,61 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
 
+    private fun setupTodayQuestion() {
+        binding.todayQuestion.todayQuestionAddButton.setOnClickListener {
+            showSubmitAnswerStub()
+        }
+        binding.todayQuestion.todayQuestionPrimary.setOnClickListener {
+            showSubmitAnswerStub()
+        }
+        binding.todayQuestion.todayQuestionExpand.setOnClickListener {
+            viewModel.toggleTodayQuestionExpanded()
+        }
+    }
+
+    private fun showSubmitAnswerStub() {
+        Toast.makeText(
+            requireContext(),
+            R.string.calendar_today_question_stub,
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+
+    private fun bindTodayQuestion(questions: List<Question>, expanded: Boolean) {
+        val banner = binding.todayQuestion
+        if (questions.isEmpty()) {
+            banner.root.visibility = View.GONE
+            return
+        }
+
+        banner.root.visibility = View.VISIBLE
+        banner.todayQuestionPrimary.text = questions.first().title
+        val hasMore = questions.size > 1
+        banner.todayQuestionExpand.visibility = if (hasMore) View.VISIBLE else View.GONE
+        banner.todayQuestionExpand.rotation = if (expanded) 180f else 0f
+
+        banner.todayQuestionExtraList.removeAllViews()
+        if (expanded && hasMore) {
+            banner.todayQuestionExtraList.visibility = View.VISIBLE
+            questions.drop(1).forEach { question ->
+                val item =
+                    TextView(requireContext()).apply {
+                        text = question.title
+                        setTextColor(Color.parseColor("#323232"))
+                        textSize = 14f
+                        setPadding(0, dp(8), 0, dp(8))
+                        setOnClickListener { showSubmitAnswerStub() }
+                    }
+                banner.todayQuestionExtraList.addView(item)
+            }
+        } else {
+            banner.todayQuestionExtraList.visibility = View.GONE
+        }
+    }
+
+    private fun dp(value: Int): Int =
+        (value * resources.displayMetrics.density).toInt()
+
     private fun setupDetailContainer() {
         childFragmentManager.addOnBackStackChangedListener {
             val hasDetail = childFragmentManager.backStackEntryCount > 0
@@ -157,6 +216,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             updateMonthPicker()
             scrollPagerToMonthIndex(viewModel.currentMonthIndex.value)
             viewModel.fetchData()
+            viewModel.fetchTodayQuestions()
         }
     }
 
@@ -207,6 +267,26 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                         if (binding.monthViewPager.currentItem != index) {
                             scrollPagerToMonthIndex(index)
                         }
+                    }
+                }
+                launch {
+                    viewModel.todayQuestions.collect { questions ->
+                        bindTodayQuestion(questions, viewModel.todayQuestionExpanded.value)
+                    }
+                }
+                launch {
+                    viewModel.showTodayQuestion.collect { visible ->
+                        binding.todayQuestion.root.visibility =
+                            if (visible && viewModel.todayQuestions.value.isNotEmpty()) {
+                                View.VISIBLE
+                            } else {
+                                View.GONE
+                            }
+                    }
+                }
+                launch {
+                    viewModel.todayQuestionExpanded.collect { expanded ->
+                        bindTodayQuestion(viewModel.todayQuestions.value, expanded)
                     }
                 }
             }

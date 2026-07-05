@@ -8,6 +8,7 @@ import com.littlethingsandroidai.domain.calendar.model.CalendarDay
 import com.littlethingsandroidai.domain.calendar.model.CalendarMonth
 import com.littlethingsandroidai.domain.calendar.model.MonthItemType
 import com.littlethingsandroidai.core.common.log.LTLog
+import com.littlethingsandroidai.domain.calendar.model.Question
 import com.littlethingsandroidai.domain.calendar.model.WeekDay
 import com.littlethingsandroidai.service.AppDataWithAuthorizationServiceful
 import java.time.LocalDate
@@ -48,6 +49,25 @@ class CalendarViewModel(
 
     private val _isMonthPickerVisible = MutableStateFlow(false)
     val isMonthPickerVisible: StateFlow<Boolean> = _isMonthPickerVisible.asStateFlow()
+
+    private val _todayQuestions = MutableStateFlow<List<Question>>(emptyList())
+    val todayQuestions: StateFlow<List<Question>> = _todayQuestions.asStateFlow()
+
+    private val _showTodayQuestion = MutableStateFlow(false)
+    val showTodayQuestion: StateFlow<Boolean> = _showTodayQuestion.asStateFlow()
+
+    private val _todayQuestionExpanded = MutableStateFlow(false)
+    val todayQuestionExpanded: StateFlow<Boolean> = _todayQuestionExpanded.asStateFlow()
+
+    fun toggleTodayQuestionExpanded() {
+        _todayQuestionExpanded.value = !_todayQuestionExpanded.value
+    }
+
+    fun organize(): List<Question> {
+        val questions = _todayQuestions.value
+        if (questions.isEmpty()) return emptyList()
+        return listOf(questions.first()) + questions.drop(1)
+    }
 
     fun monthPickerItems(): List<MonthPickerItem> = MonthPickerItemsBuilder.from(_months.value)
 
@@ -241,6 +261,16 @@ class CalendarViewModel(
             updatedMonths.find { it.id == currentMonth.id }?.let { refreshed ->
                 _currentMonth.value = refreshed
             }
+        }
+    }
+
+    suspend fun fetchTodayQuestions() {
+        try {
+            val questions = service.fetchTodayQuestionsUseCase.execute()
+            _todayQuestions.value = questions
+            _showTodayQuestion.value = questions.isNotEmpty()
+        } catch (error: Exception) {
+            LTLog.e(TAG, "fetchTodayQuestions failed", error)
         }
     }
 

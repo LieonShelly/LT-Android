@@ -1,7 +1,9 @@
 package com.littlethingsandroidai.domain.calendar
 
+import com.littlethingsandroidai.domain.calendar.model.Question
 import com.littlethingsandroidai.service.AppDataWithAuthorizationServiceful
 import com.littlethingsandroidai.service.reflection.usecase.CalendarReflectionsUseCaseType
+import com.littlethingsandroidai.service.reflection.usecase.FetchTodayQuestionsUseCaseType
 import java.time.YearMonth
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -13,8 +15,10 @@ import org.mockito.kotlin.whenever
 
 class CalendarViewModelTest {
     private val calendarUseCase: CalendarReflectionsUseCaseType = mock()
+    private val todayQuestionsUseCase: FetchTodayQuestionsUseCaseType = mock()
     private val service: AppDataWithAuthorizationServiceful = mock {
         whenever(it.calendarReflectionsUseCase).thenReturn(calendarUseCase)
+        whenever(it.fetchTodayQuestionsUseCase).thenReturn(todayQuestionsUseCase)
     }
 
     @Test
@@ -68,6 +72,24 @@ class CalendarViewModelTest {
         val items = viewModel.monthPickerItems()
         assertTrue(items.any { it is MonthPickerItem.YearHeader })
         assertTrue(items.any { it is MonthPickerItem.MonthEntry })
+    }
+
+    @Test
+    fun organize_returnsHeadFirstThenRemainingQuestions() = runTest {
+        whenever(todayQuestionsUseCase.execute()).thenReturn(
+            listOf(
+                Question(id = "q1", title = "First", category = null),
+                Question(id = "q2", title = "Second", category = null),
+            ),
+        )
+        val viewModel = CalendarViewModel(service)
+        viewModel.fetchTodayQuestions()
+
+        val organized = viewModel.organize()
+        assertEquals(2, organized.size)
+        assertEquals("q1", organized[0].id)
+        assertEquals("q2", organized[1].id)
+        assertTrue(viewModel.showTodayQuestion.value)
     }
 
     @Test

@@ -114,7 +114,6 @@ class CalendarMonthPickerAdapter(
             title.setOnClickListener { onMonthSelected(month) }
         }
     }
-
     private companion object {
         const val VIEW_TYPE_YEAR = 0
         const val VIEW_TYPE_MONTH = 1

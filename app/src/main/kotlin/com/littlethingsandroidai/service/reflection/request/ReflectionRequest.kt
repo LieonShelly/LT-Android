@@ -19,4 +19,10 @@ sealed class ReflectionRequest : ApiRequest {
                 params = listOf("start" to startDate, "end" to endDate),
             )
     }
+
+    data object QuestionsOfToday : ReflectionRequest() {
+        override val endPoint: EndPoint = DefaultEndPoint.baseUrl(path = "/api/questions-of-the-day")
+        override val method: HttpMethod = HttpMethod.GET
+        override val payload: HttpPayload = HttpPayload.Empty
+    }
 }

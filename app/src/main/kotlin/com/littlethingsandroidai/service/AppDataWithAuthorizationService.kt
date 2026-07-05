@@ -9,6 +9,8 @@ import com.littlethingsandroidai.service.icon.usecase.MarkIconReadUseCaseType
 import com.littlethingsandroidai.service.reflection.repository.ReflectionRepository
 import com.littlethingsandroidai.service.reflection.usecase.CalendarReflectionsUseCase
 import com.littlethingsandroidai.service.reflection.usecase.CalendarReflectionsUseCaseType
+import com.littlethingsandroidai.service.reflection.usecase.FetchTodayQuestionsUseCase
+import com.littlethingsandroidai.service.reflection.usecase.FetchTodayQuestionsUseCaseType
 
 interface PlaceholderUseCase {
     suspend fun execute()
@@ -26,9 +28,9 @@ interface AppDataWithAuthorizationServiceful {
     val authUseCase: AuthUseCaseType
     val calendarReflectionsUseCase: CalendarReflectionsUseCaseType
     val markIconReadUseCase: MarkIconReadUseCaseType
+    val fetchTodayQuestionsUseCase: FetchTodayQuestionsUseCaseType
     val submitAnswerUseCase: PlaceholderUseCase
     val fetchCategoriesUseCase: PlaceholderUseCase
-    val fetchTodayQuestionsUseCase: PlaceholderUseCase
 }
 
 class AppDataWithAuthorizationService(
@@ -49,15 +51,15 @@ class AppDataWithAuthorizationService(
         MarkIconReadUseCase(repository = iconRepository)
     }
 
+    override val fetchTodayQuestionsUseCase: FetchTodayQuestionsUseCaseType by lazy {
+        FetchTodayQuestionsUseCase(repository = reflectionRepository)
+    }
+
     override val submitAnswerUseCase: PlaceholderUseCase by lazy {
         NotImplementedPlaceholderUseCase(useCaseName = "SubmitAnswerUseCase")
     }
 
     override val fetchCategoriesUseCase: PlaceholderUseCase by lazy {
         NotImplementedPlaceholderUseCase(useCaseName = "FetchCategoriesUseCase")
-    }
-
-    override val fetchTodayQuestionsUseCase: PlaceholderUseCase by lazy {
-        NotImplementedPlaceholderUseCase(useCaseName = "FetchTodayQuestionsUseCase")
     }
 }

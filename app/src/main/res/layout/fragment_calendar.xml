@@ -75,4 +75,16 @@
         android:focusable="true"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/todayQuestion"
+        layout="@layout/view_calendar_today_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="110dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </FrameLayout>

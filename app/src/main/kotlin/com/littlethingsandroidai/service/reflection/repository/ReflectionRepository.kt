@@ -9,11 +9,14 @@ import com.littlethingsandroidai.domain.calendar.model.Icon
 import com.littlethingsandroidai.domain.calendar.model.Question
 import com.littlethingsandroidai.service.reflection.dto.AnswerDto
 import com.littlethingsandroidai.service.reflection.dto.CalendarDayDto
+import com.littlethingsandroidai.service.reflection.dto.QuestionDto
 import com.littlethingsandroidai.service.reflection.request.ReflectionRequest
 import java.time.LocalDate
 
 interface ReflectionRepository {
     suspend fun fetchCalendarReflections(startMonth: LocalDate, endMonth: LocalDate): List<DayReflections>
+
+    suspend fun fetchTodayQuestions(): List<Question>
 }
 
 class DefaultReflectionRepository(
@@ -38,6 +41,26 @@ class DefaultReflectionRepository(
         }
     }
 
+    override suspend fun fetchTodayQuestions(): List<Question> {
+        val request = ReflectionRequest.QuestionsOfToday
+        val response = apiClient.sendRequest(request)
+        val parsed: UniversalResponse<List<QuestionDto>> = response.parseJson()
+        return parsed.data.map(::mapQuestion)
+    }
+
+    private fun mapQuestion(dto: QuestionDto): Question =
+        Question(
+            id = dto.id,
+            title = dto.title,
+            category =
+                dto.category?.let { c ->
+                    Category(
+                        id = c.id.orEmpty(),
+                        name = c.name,
+                    )
+                },
+        )
+
     private fun mapAnswer(dto: AnswerDto): Answer =
         Answer(
             id = dto.id,
@@ -47,7 +70,7 @@ class DefaultReflectionRepository(
                     Question(
                         id = it.id,
                         title = it.title,
-                        category = it.category?.let { c -> Category(id = c.id, name = c.name) },
+                        category = it.category?.let { c -> Category(id = c.id.orEmpty(), name = c.name) },
                     )
                 },
             icon =

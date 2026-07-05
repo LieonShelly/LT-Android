@@ -27,7 +27,7 @@ data class QuestionDto(
 
 @Serializable
 data class CategoryDto(
-    val id: String,
+    val id: String? = null,
     val name: String,
 )
 

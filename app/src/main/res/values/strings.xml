@@ -24,4 +24,8 @@
     <string name="calendar_month_lock">The best is yet to come</string>
     <string name="calendar_stamp_more_badge">%1$d+</string>
     <string name="reflection_detail_back_desc">Back</string>
+    <string name="calendar_today_question_header">Today\'s Spark</string>
+    <string name="calendar_today_question_expand_desc">Show more questions</string>
+    <string name="calendar_today_question_add_desc">Add answer</string>
+    <string name="calendar_today_question_stub">Submit answer coming soon</string>
 </resources>
